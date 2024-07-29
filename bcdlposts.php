@@ -14,7 +14,8 @@ function display_posts_by_category_shortcode( $atts ) {
         'category' => '',
     ), $atts );
 
-    $category_name = $atts['category'];
+    // Check if category is set via GET parameter, if so use it
+    $category_name = isset($_GET['category']) ? sanitize_text_field($_GET['category']) : $atts['category'];
 
     $args = array(
         'category_name' => $category_name,
@@ -45,6 +46,7 @@ function display_posts_by_category_shortcode( $atts ) {
             $output .= '<td>' . get_the_title() . '</td>';
             $output .= '<tr>';
         }
+        $output .= '</tbody>';
         $output .= '</table>';
         wp_reset_postdata();
         return $output;
