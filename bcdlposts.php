@@ -25,17 +25,27 @@ function display_posts_by_category_shortcode( $atts ) {
     $query = new WP_Query( $args );
 
     if ( $query->have_posts() ) {
-        $output = '<ul>';
+        $output = '<table class="table">';
+        $output .= '<thead>';
+        $output .= '<tr>';
+        $output .= '<th scope="col">Post ID</th>';
+        $output .= '<th scope="col">Post Category</th>';
+        $output .= '<th scope="col">Post Title</th>';
+        $output .= '</tr>';
+        $output .= '</thead>';
+        $output .= '<tbody>';
+
         while ( $query->have_posts() ) {
             $query->the_post();
             $categories = get_the_category();
             $category_name = $categories[0]->name;
-            $output .= '<li>';
-            $output .= 'Post ID: ' . get_the_ID() . '<br>';
-            $output .= 'Post Category: ' . $category_name . '<br>';
-            $output .= 'Post Title: ' . get_the_title() . '</li>';
+            $output .= '<tr>';
+            $output .= '<th scope="row">' . get_the_ID() . '</th>';
+            $output .= '<td>' . $category_name . '</td>';
+            $output .= '<td>' . get_the_title() . '</td>';
+            $output .= '<tr>';
         }
-        $output .= '</ul>';
+        $output .= '</table>';
         wp_reset_postdata();
         return $output;
     } else {
