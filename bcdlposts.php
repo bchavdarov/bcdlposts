@@ -3,7 +3,7 @@
 Plugin Name:    BCDL Display Posts by Category
 Plugin URI:     https://github.com/bchavdarov/bcdlposts
 Description:    A basic WordPress plugin. Displays posts of a given category in the order: Post ID, Post Category, and Post Title.
-Version:        1.0
+Version:        1.1
 Author:         Boncho Chavdarov
 Author URI:     https://github.com/bchavdarov
 License:        GPL-2.0-or-later
@@ -26,7 +26,7 @@ function display_posts_by_category_shortcode( $atts ) {
     $query = new WP_Query( $args );
 
     if ( $query->have_posts() ) {
-        $output = '<table class="table">';
+        $output .= '<table class="table">';
         $output .= '<thead>';
         $output .= '<tr>';
         $output .= '<th scope="col">Post ID</th>';
@@ -44,7 +44,7 @@ function display_posts_by_category_shortcode( $atts ) {
             $output .= '<th scope="row">' . get_the_ID() . '</th>';
             $output .= '<td>' . $category_name . '</td>';
             $output .= '<td>' . get_the_title() . '</td>';
-            $output .= '<tr>';
+            $output .= '</tr>';
         }
         $output .= '</tbody>';
         $output .= '</table>';
@@ -57,4 +57,24 @@ function display_posts_by_category_shortcode( $atts ) {
 
 add_shortcode( 'display_posts_by_category', 'display_posts_by_category_shortcode' );
 
-
+function display_all_categories_shortcode() {
+    $categories = get_categories();
+    $output = '<table class="table">';
+    $output .= '<thead>';
+    $output .= '<tr>';
+    $output .= '<th scope="col">Category Name</th>';
+    $output .= '<th scope="col">Category Slug</th>';
+    $output .= '</tr>';
+    $output .= '</thead>';
+    $output .= '<tbody>';
+    foreach ( $categories as $category ) {
+        $output .= '<tr>';
+        $output .= '<th scope="row">' . esc_html( $category->name ) . '</th>'; 
+        $output .= '<td>' . esc_html( $category->slug ) . '</td>';
+        $output .= '</tr>';
+    }
+    $output .= '</tbody>';
+    $output .= '</table>';
+    return $output;
+}
+add_shortcode( 'display_all_categories', 'display_all_categories_shortcode' );
